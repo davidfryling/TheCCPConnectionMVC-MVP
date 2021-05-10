@@ -1,0 +1,55 @@
+﻿@model TheCCPConnection.Models.Advisor
+
+@{
+    ViewBag.Title = "Advisor Profile";
+}
+
+<h2>@Model.FirstLast's Profile</h2>
+
+<div>
+    <h4>Advisor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdvisorSchools)
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var item in Model.AdvisorSchools)
+                {
+                    <li>@Html.DisplayFor(modelItem => item.School.Type):&nbsp;@Html.DisplayFor(modelItem => item.School.Name)</li>
+                }
+            </ul>
+        </dd>
+
+    </dl>
+</div>
+
+<div>
+    <h3 class="text-left"><a href="@Url.Action("Index", "Admin")" class="btn btn-default btn-sm">&#12298;&nbsp;Back to Dashboard</a></h3>
+</div>

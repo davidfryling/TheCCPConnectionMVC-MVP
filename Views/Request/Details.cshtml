@@ -1,0 +1,53 @@
+﻿@model TheCCPConnection.ViewModels.RequestVM
+
+@{
+    ViewBag.Title = "Request History";
+}
+
+<h2>Request History</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.FullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.FullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Course.FullCourse)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Course.FullCourse)
+        </dd>
+
+        @foreach (var request in Model.Requests)
+        {
+            <dt>
+                Your Request History for this course:
+            </dt>
+            <dd>
+                @if (request.CourseID == ViewBag.CourseID)
+                {
+                    <ul>
+                        <li>
+                            @Html.DisplayFor(model => model.Request.Type) 
+                            Request&nbsp;|&nbsp; Made on:
+                            @Html.DisplayFor(model => model.Request.TimeStamp)
+                        </li>
+                    </ul>
+                }
+            </dd>
+            }
+        </dl>
+
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Request.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

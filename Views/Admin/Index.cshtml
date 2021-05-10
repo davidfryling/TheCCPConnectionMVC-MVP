@@ -1,0 +1,219 @@
+﻿@model TheCCPConnection.ViewModels.AdminDashboardVM
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<h2 class="text-center">
+    @ViewBag.Title
+</h2>
+
+<div class="card col-md-12">
+    <div class="card-title">
+        <div class="card-body">
+
+            <div>
+                <h3 class="text-center">
+                    <a href="@Url.Action("RegisterSecure", "Account")" class="btn btn-success">
+                        Register New User Account
+                    </a>
+                </h3>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="card col-md-12">
+    <h3 class="text-center">
+        Counselors
+    </h3>
+
+    <table class="table table-hover table-striped text-justify">
+        <tr class="text-center">
+            <th class="text-center">
+                User Email
+            </th>
+
+            <th class="text-center">
+                Counselor Name
+            </th>
+
+            <th class="text-center">
+                Action
+            </th>
+        </tr>
+        @foreach (var user in Model.CounselorUsers)
+        {
+            {
+                ViewBag.UserProfileFound = false;
+            }
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(model => user.Email)
+                </td>
+
+                @if (Model.Counselors.Count > 0)
+                {
+                    foreach (var counselor in Model.Counselors)
+                    {
+                            
+                        if (counselor.ID.ToString() == user.Id)
+                        {
+                            {
+                                ViewBag.UserProfileFound = true;
+                            }
+
+                            <td>
+                                @Html.DisplayFor(model => counselor.LastFirst)
+                            </td>
+
+                            <td>
+                                <div class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", "Counselor", new { id = user.Id })" class="btn btn-default btn-sm">
+                                            View Profile
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Counselor", new { id = user.Id })" class="btn btn-default btn-sm">
+                                            Update Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        }        
+                    }
+                    if (ViewBag.UserProfileFound == false)
+                    {
+                        <td>
+                            <p>
+                                No user profile created...
+                            </p>
+                        </td>
+
+                        <td>
+                            <p class="text-center">
+                                <a href="@Url.Action("Create", "Counselor", new { id = user.Id })" class="btn btn-success btn-sm">
+                                    Create Profile
+                                </a>
+                            </p>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td>
+                        <p>
+                            No user profile created...
+                        </p>
+                    </td>
+
+                    <td>
+                        <p class="text-center">
+                            <a href="@Url.Action("Create", "Counselor", new { id = user.Id })" class="btn btn-success btn-sm">
+                                Create Profile
+                            </a>
+                        </p>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <hr />
+</div>
+
+<div class="card col-md-12">
+    <h3 class="text-center">
+        Advisors
+    </h3>
+
+    <table class="table table-hover table-striped text-justify">
+        <tr class="text-center">
+            <th class="text-center">
+                User Email
+            </th>
+
+            <th class="text-center">
+                Advisor Name
+            </th>
+
+            <th class="text-center">
+                Action
+            </th>
+        </tr>
+        @foreach (var user in Model.AdvisorUsers)
+        {
+            {
+                ViewBag.UserProfileFound = false;
+            }
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(model => user.Email)
+                </td>
+
+                @if (Model.Advisors.Count > 0)
+                {
+                    foreach (var advisor in Model.Advisors)
+                    {
+
+                        if (advisor.ID.ToString() == user.Id)
+                        {
+                            {
+                                ViewBag.UserProfileFound = true;
+                            }
+
+                            <td>
+                                @Html.DisplayFor(model => advisor.LastFirst)
+                            </td>
+
+                            <td>
+                                <div class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", "Advisor", new { id = user.Id })" class="btn btn-default btn-sm">
+                                            View Profile
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Advisor", new { id = user.Id })" class="btn btn-default btn-sm">
+                                            Update Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                    }
+                    if (ViewBag.UserProfileFound == false)
+                    {
+                        <td>
+                            <p>
+                                No user profile created...
+                            </p>
+                        </td>
+
+                        <td>
+                            <p class="text-center">
+                                <a href="@Url.Action("Create", "Advisor", new { id = user.Id })" class="btn btn-success btn-sm">
+                                    Create Profile
+                                </a>
+                            </p>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td>
+                        <p>
+                            No user profile created...
+                        </p>
+                    </td>
+
+                    <td>
+                        <p class="text-center">
+                            <a href="@Url.Action("Create", "Advisor", new { id = user.Id })" class="btn btn-success btn-sm">
+                                Create Profile
+                            </a>
+                        </p>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <hr />
+</div>

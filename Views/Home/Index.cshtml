@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron">
+    <h2 class="text-center">Welcome to The CCP Connection!</h2>
+    <p class="lead text-center">An online course request portal</p>
+</div>
+
+<p class="text-center">Click your role below to get started...</p>
+
+<div class="row">
+    <div class="col-md-3 col-sm-12">
+        <h3 class="text-center"><a href="@Url.Action("Index", "Student")" class="btn btn-primary btn-lg btn-block">Student</a></h3>
+    </div>
+    <div class="col-md-3 col-sm-12">
+        <h3 class="text-center"><a href="@Url.Action("Index", "Parent")" class="btn btn-primary btn-lg btn-block">Parent</a></h3>
+    </div>
+    <div class="col-md-3 col-sm-12">
+        <h3 class="text-center"><a href="@Url.Action("Index", "Counselor")" class="btn btn-primary btn-lg btn-block">Counselor</a></h3>
+    </div>
+    <div class="col-md-3 col-sm-12">
+        <h3 class="text-center"><a href="@Url.Action("Index", "Advisor")" class="btn btn-primary btn-lg btn-block">Advisor</a></h3>
+    </div>
+</div>

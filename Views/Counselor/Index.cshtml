@@ -1,0 +1,410 @@
+﻿@model TheCCPConnection.ViewModels.CounselorDashboardVM
+
+@{
+    ViewBag.Title = "Counselor Dashboard";
+}
+
+<h2 class="text-center">
+    @ViewBag.Title
+</h2>
+
+<div class="card col-md-6">
+    <div class="card-title">
+        <h3 class="text-center">
+            You
+        </h3>
+        <hr />
+
+        <div class="card-body">
+            @if (ViewBag.CounselorID != null)
+            {
+                foreach (var counselor in Model.Counselors)
+                {
+                    if (counselor.ID == ViewBag.CounselorID)
+                    {
+                        <h4 class="text-center">
+                            @Html.DisplayFor(model => counselor.FirstLast)
+                        </h4>
+                        <h4 class="text-center">
+                            @Html.DisplayFor(model => counselor.EmailAddress)
+                        </h4>
+                    }
+                }
+            }
+            else
+            {
+                <h4 class="text-center">
+                    It looks like your profile has not yet been set up. Please contact your administrator to set up your profile.
+                </h4>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="card col-md-6">
+    <div class="card-title">
+        @if (ViewBag.CounselorID != null)
+        {
+            <h3 class="text-center">
+                Your Schools
+            </h3>
+            <hr />
+
+            <div class="card-body">
+                @foreach (var school in Model.CounselorSchools)
+                {
+                    if (school.Counselor.ID == ViewBag.CounselorID)
+                    {
+                        <div class="text-center">
+                            <h4>
+                                @school.School.Name
+                            </h4>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card col-md-12">
+    <hr />
+    @if (ViewBag.CounselorID != null)
+    {
+        <div class="card col-md-6">
+            <div class="card-title">
+                <div class="card-body">
+                    <h5 class="text-left">
+                        Below are the steps for completing a course request:
+                    </h5>
+
+                    <ol>
+                        <li>
+                            Student creates course request
+                        </li>
+                        <li>
+                            Parent/Guardian approves/denies requested course
+                        </li>
+                        <li>
+                            You enter max credits for student (as needed)
+                        </li>
+                        <li>
+                            You enter SSID for student (as needed)
+                        </li>
+                        <li>
+                            You approve/deny requested course
+                        </li>
+                        <li>
+                            Advisor adds/drops requested course
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-md-12">
+            <h3 class="text-center">
+                Add Requests
+            </h3>
+
+            <table class="table table-hover table-striped text-justify">
+                <tr class="text-center">
+                    <th class="text-center">
+                        Student Name
+                    </th>
+                    <th class="text-center">
+                        SSID
+                    </th>
+                    <th class="text-center">
+                        Max Credits
+                    </th>
+                    <th class="text-center">
+                        @Html.DisplayNameFor(model => model.Courses)
+                    </th>
+                    <th class="text-center">
+                        Request Status
+                    </th>
+                    <th class="text-center">
+
+                    </th>
+                </tr>
+                @foreach (var request in Model.Requests)
+                {
+                    foreach (var student in ViewBag.CounselorStudents)
+                    {
+                        if (request.StudentID == student.ID && request.Type == ViewBag.AddType)
+                        {
+                            <tr class="text-center">
+                                <td>
+                                    @Html.DisplayFor(model => request.Student.LastFirst)
+                                </td>
+
+                                <td>
+                                    @if (student.SSID == null)
+                                    {
+                                        <p class="text-center">
+                                            <a href="@Url.Action("UpdateID", "Student", new { id = student.ID })" class="btn btn-info btn-sm">
+                                                Enter SSID
+                                            </a>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        @student.SSID
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    @if (student.MaxCredits == null)
+                                    {
+                                        <p class="text-center">
+                                            <a href="@Url.Action("UpdateMaxCredits", "Student", new { id = student.ID })" class="btn btn-info btn-sm">
+                                                Enter Max Credits
+                                            </a>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        @student.MaxCredits
+                                        <p class="text-center">
+                                            <a href="@Url.Action("UpdateMaxCredits", "Student", new { id = student.ID })" class="btn btn-default btn-sm">
+                                                Update Max Credits
+                                            </a>
+                                        </p>
+                                    }
+                                </td>
+
+                                @if (request.Active == true)
+                                {
+                                    <td class="text-center">
+                                        @Html.DisplayFor(model => request.Course.FullCourse)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-muted">
+                                        &#10006;&nbsp;@Html.DisplayFor(model => request.Course.FullCourse)
+                                    </td>
+                                }
+                                <td>
+                                    <p class="text-success">
+                                        &#10003;&nbsp;Student&nbsp;(@Html.DisplayFor(model => request.Student.FirstLast)) created course request at @Html.DisplayFor(model => request.Timestamp)
+                                    </p>
+                                    @foreach (var decision in Model.ParentDecisions)
+                                    {
+                                        {
+                                            ViewBag.ParentDecisionMade = false;
+                                        }
+                                        if (decision.RequestID == request.ID)
+                                        {
+                                            {
+                                                ViewBag.ParentDecisionMade = true;
+                                            }
+                                            if (decision.Approved)
+                                            {
+                                <p class="text-success">
+                                    &#10003;&nbsp;Parent&nbsp;(@Html.DisplayFor(model => decision.Parent.FirstLast)) approved request at @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                            else
+                                            {
+                                <p class="text-danger">
+                                    &#10006;&nbsp;Parent&nbsp;(@Html.DisplayFor(model => decision.Parent.FirstLast)) denied request at                                                     @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    @if (!ViewBag.ParentDecisionMade)
+                                    {
+                                        if (request.Active == true)
+                                        {
+                                            <p class="text-muted">
+                                                &#128336;&nbsp;Parent/Guardian Approval Pending...
+                                            </p>
+                                        }
+                                    }
+                                    @foreach (var decision in Model.CounselorDecisions)
+                                    {
+                                        {
+                                            ViewBag.CounselorDecisionMade = false;
+                                        }
+                                        if (decision.RequestID == request.ID)
+                                        {
+                                            {
+                                                ViewBag.CounselorDecisionMade = true;
+                                            }
+                                            if (decision.Approved)
+                                            {
+                                <p class="text-success">
+                                    &#10003;&nbsp;Counselor&nbsp;(@Html.DisplayFor(model => decision.Counselor.FirstLast)) approved request at @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                            else
+                                            {
+                                <p class="text-danger">
+                                    &#10006;&nbsp;Counselor&nbsp;(@Html.DisplayFor(model => decision.Counselor.FirstLast)) denied request at @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    @if (!ViewBag.CounselorDecisionMade)
+                                    {
+                                        if (request.Active == true)
+                                        {
+                                            <p class="text-muted">
+                                                &#128336;&nbsp;Counselor Approval Pending...
+                                            </p>
+                                        }
+                                    }
+                                    @foreach (var decision in Model.AdvisorDecisions)
+                                    {
+                                        {
+                                            ViewBag.AdvisorDecisionMade = false;
+                                        }
+                                        if (decision.RequestID == request.ID)
+                                        {
+                                            {
+                                                ViewBag.AdvisorDecisionMade = true;
+                                            }
+                                            if (decision.Registered)
+                                            {
+                                <p class="text-success">
+                                    &#10003;&nbsp;Advisor&nbsp;(@Html.DisplayFor(model => decision.Advisor.FirstLast)) added requested course at @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                            else
+                                            {
+                                <p class="text-danger">
+                                    &#10006;&nbsp;Advisor&nbsp;(@Html.DisplayFor(model => decision.Advisor.FirstLast)) denied request at @Html.DisplayFor(model => decision.Timestamp)
+                                </p>
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    @if (!ViewBag.AdvisorDecisionMade)
+                                    {
+                                        if (request.Active == true)
+                                        {
+                                            <p class="text-muted">
+                                                &#128336;&nbsp;Advisor Action Pending...
+                                            </p>
+                                        }
+                                    }
+                                    @foreach (var cancellation in Model.StudentCancels)
+                                    {
+                                        if (cancellation.RequestID == request.ID)
+                                        {
+                                <p class="text-danger">
+                                    &#10006;&nbsp;Student&nbsp;(@Html.DisplayFor(model => cancellation.Student.FirstLast)) cancelled request at @Html.DisplayFor(model => cancellation.Timestamp)
+                                </p>
+                                            break;
+                                        }
+
+                                    }
+                                </td>
+                                <td>
+                                    @if (request.Active == true)
+                                    {
+                                        foreach (var decision in Model.CounselorDecisions)
+                                        {
+                                            {
+                                                ViewBag.CounselorDecisionMade = false;
+                                            }
+                                            if (decision.RequestID == request.ID)
+                                            {
+                                                {
+                                                    ViewBag.CounselorDecisionMade = true;
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        if (!ViewBag.CounselorDecisionMade)
+                                        {
+                                            <p class="text-center">
+                                                <a href="@Url.Action("CounselorApprove", "Request", new { requestId = request.ID, counselorId = ViewBag.CounselorID })" class="btn btn-success btn-sm">
+                                                    &#10003;&nbsp;Approve Request
+                                                </a>
+                                            </p>
+                                            <p>
+                                                <a href="@Url.Action("CounselorDeny", "Request", new { requestId = request.ID, counselorId = ViewBag.CounselorID })" class="btn btn-danger btn-sm">
+                                                    &#10006;&nbsp;Deny Request
+                                                </a>
+                                            </p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var cancellation in Model.StudentCancels)
+                                        {
+                                            if (cancellation.RequestID == request.ID)
+                                            {
+                                                <p class="text-danger">
+                                                    @Html.DisplayNameFor(model => cancellation.Reason):&nbsp;
+                                                </p>
+                                                <p class="text-danger">
+                                                    @Html.DisplayFor(model => cancellation.Reason)
+                                                </p>
+                                                break;
+                                            }
+                                        }
+                                        foreach (var decision in Model.ParentDecisions)
+                                        {
+                                            if (decision.RequestID == request.ID)
+                                            {
+                                                <p class="text-danger">
+                                                    @Html.DisplayNameFor(model => decision.Reason):&nbsp;
+                                                </p>
+                                                <p class="text-danger">
+                                                    @Html.DisplayFor(model => decision.Reason)
+                                                </p>
+                                                break;
+                                            }
+                                        }
+                                        foreach (var decision in Model.CounselorDecisions)
+                                        {
+                                            if (decision.RequestID == request.ID)
+                                            {
+                                                <p class="text-danger">
+                                                    @Html.DisplayNameFor(model => decision.Reason):&nbsp;
+                                                </p>
+                                                <p class="text-danger">
+                                                    @Html.DisplayFor(model => decision.Reason)
+                                                </p>
+                                                break;
+                                            }
+                                        }
+                                        foreach (var decision in Model.AdvisorDecisions)
+                                        {
+                                            if (decision.RequestID == request.ID)
+                                            {
+                                                <p class="text-danger">
+                                                    @Html.DisplayNameFor(model => decision.Reason):&nbsp;
+                                                </p>
+                                                <p class="text-danger">
+                                                    @Html.DisplayFor(model => decision.Reason)
+                                                </p>
+                                                break;
+                                            }
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+            <hr />
+
+            <h3 class="text-center">
+                Drop Requests
+            </h3>
+
+            @*after parent approval built and tested, copy and past add request table, except replace ViewBag with DropType*@
+        </div>
+    }
+</div>
